@@ -108,8 +108,12 @@ const defaultApplications = [];
 // Seed local db.json file structure on startup if missing
 function initDB() {
   if (!fs.existsSync(DB_PATH)) {
-    fs.writeFileSync(DB_PATH, JSON.stringify({ jobs: defaultJobs, applications: defaultApplications }, null, 2));
-    console.log('Local fallback database db.json initialized successfully!');
+    try {
+      fs.writeFileSync(DB_PATH, JSON.stringify({ jobs: defaultJobs, applications: defaultApplications }, null, 2));
+      console.log('Local fallback database db.json initialized successfully!');
+    } catch (err) {
+      console.error('Warning: Failed to initialize db.json (read-only filesystem on Vercel):', err.message);
+    }
   }
 }
 
